@@ -57,5 +57,15 @@ public class OurBasicHashMap<K, V> extends HashMapDefinition<K, V> {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'items'");
     }
+
+    @Override
+    protected int hash(K key) {
+        int result = key.hashCode() % capacity;
+        if (result < 0) {
+            result += capacity;
+        }
+
+        return result;
+    }
     
 }

@@ -26,4 +26,7 @@ public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V>
             table[i] = new Entry<K, V>(EntryState.EMPTY);
         }
     }
+
+    /* TODO add method/constructor not to be used by user but for when the load-factor
+     demands re-calibration */
 }

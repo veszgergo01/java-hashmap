@@ -56,8 +56,15 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
     @Override
     public boolean has(K key) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'has'");
+        int index = hash(key);
+        final int initIndex = index;
+
+        while (!key.equals(table[index].key)) {
+            index = (index + 1) % capacity;
+            if (index == initIndex) return false;
+        }
+
+        return true;
     }
 
     @Override

@@ -1,12 +1,12 @@
 import java.util.Iterator;
 
 public abstract class HashMapDefinition<K, V> {
-    private static final int DEFAULT_CAPACITY = 16;
-    private static final float DEFAULT_LAMBDA_VALUE = 0.75f;
+    public static final int DEFAULT_CAPACITY = 16;
+    public static final float DEFAULT_LAMBDA_VALUE = 0.75f;
 
-    private float lambda;
-    private int capacity;
-    private Entry<K, V>[] table;
+    protected float lambda;
+    protected int capacity;
+    protected Entry<K, V>[] table;
 
     public HashMapDefinition() {
         this(DEFAULT_CAPACITY, DEFAULT_LAMBDA_VALUE);

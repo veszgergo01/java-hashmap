@@ -22,7 +22,7 @@ public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V>
         this.lambda = loadFactor;
         this.table = new Entry[capacity];
 
-        for (int i = 0; i < table.length - 1; i++) {
+        for (int i = 0; i < table.length; i++) {
             table[i] = new Entry<K, V>(EntryState.EMPTY);
         }
     }

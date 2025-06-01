@@ -13,14 +13,14 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
     public boolean insert(K key, V value) {
         int index = hash(key);
         // or is it a collision (did something different hash to the same value)?
-        boolean collision = !table[index].key.equals(key);
+        boolean collision = !key.equals(table[index].key);
 
         if (!collision) {
             table[index].value = value;
         } else {
-            while (table[index].state != EntryState.EMPTY || table[index].state != EntryState.TOMBSTONE) {
+            while (EntryState.OCCUPIUED.equals(table[index].state)) {
                 index++;
-                if (index > capacity) {
+                if (index >= capacity) {
                     // TODO resize
                     throw new UnsupportedOperationException("Exceeded capacityi, resize not yet implemented");
                 }

@@ -12,8 +12,14 @@ public class OurBasicHashMap<K, V> extends HashMapDefinition<K, V> {
 
     @Override
     public boolean insert(K key, V value) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'insert'");
+        int index = hash(key);
+        System.out.println("Index: " + index);
+        if (table[index] == null) {
+            table[index] = new Entry<K, V>(key, value);
+            return true;
+        } else {
+            throw new UnsupportedOperationException("Unimplemented method 'insert'");
+        }
     }
 
     @Override

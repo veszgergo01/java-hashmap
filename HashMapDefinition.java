@@ -1,19 +1,36 @@
 import java.util.Iterator;
 
-public interface HashMapDefinition<K, V> {
-    public boolean insert(K key, V value);
+public abstract class HashMapDefinition<K, V> {
+    private static final int DEFAULT_CAPACITY = 16;
+    private static final float DEFAULT_LAMBDA_VALUE = 0.75f;
 
-    public boolean delete(K key);
+    private float lambda;
+    private int capacity;
+    private Entry<K, V>[] table;
 
-    public V get(K key);
+    public HashMapDefinition() {
+        this(DEFAULT_CAPACITY, DEFAULT_LAMBDA_VALUE);
+    }
 
-    public boolean has(K key);
+    public HashMapDefinition(int capacity, float loadFactor) {
+        this.capacity = capacity;
+        this.lambda = loadFactor;
+        this.table = new Entry[capacity];
+    }
 
-    public int size();
+    public abstract boolean insert(K key, V value);
 
-    public boolean isEmpty();
+    public abstract boolean delete(K key);
 
-    public boolean clear();
+    public abstract V get(K key);
 
-    public Iterator<Entry<K, V>> items();
+    public abstract boolean has(K key);
+
+    public abstract int size();
+
+    public abstract boolean isEmpty();
+
+    public abstract boolean clear();
+
+    public abstract Iterator<Entry<K, V>> items();
 }

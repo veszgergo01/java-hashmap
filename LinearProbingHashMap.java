@@ -12,18 +12,15 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
     @Override
     public boolean insert(K key, V value) {
         int index = hash(key);
-        // or is it a collision (did something different hash to the same value)?
+        // is it a collision (did something different hash to the same value)?
         boolean collision = !key.equals(table[index].key);
 
         if (!collision) {
             table[index].value = value;
         } else {
             while (EntryState.OCCUPIUED.equals(table[index].state)) {
-                index++;
-                if (index >= capacity) {
-                    // TODO resize
-                    throw new UnsupportedOperationException("Exceeded capacityi, resize not yet implemented");
-                }
+                index = (index + 1) % capacity;
+                // TODO infinite loop may occur
             }
         }
 
@@ -36,8 +33,8 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         int index = hash(key);
 
         while (!key.equals(table[index].key)) {
-            index++;
-            if (index > capacity) return false;
+            index = (index + 1) % capacity;
+            // TODO infinite loop may occur
         }
 
         table[index].key = null;
@@ -51,8 +48,7 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         int index = hash(key);
 
         while (!key.equals(table[index].key)) {
-            index++;
-            if (index > capacity) return null;
+            index = (index + 1) % capacity;
         }
 
         return table[index].value;

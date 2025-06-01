@@ -33,4 +33,6 @@ public abstract class HashMapDefinition<K, V> {
     public abstract boolean clear();
 
     public abstract Iterator<Entry<K, V>> items();
+
+    protected abstract int hash(K key);
 }

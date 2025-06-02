@@ -45,7 +45,7 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         }
 
         table[index].key = null;
-        table[index].key = null;
+        table[index].value = null;
         table[index].state = EntryState.TOMBSTONE;
         size--;
         return true;

@@ -35,6 +35,10 @@ public interface HashMapInterface<K, V> {
 
     public boolean isEmpty();
 
+    /**
+     * Makes the set empty.
+     * Returns true if the set was non-empty when the method-call was made, false otherwise.
+     */
     public boolean clear();
 
     public Iterator<Entry<K, V>> items();

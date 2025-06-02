@@ -103,19 +103,31 @@ public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V>
 
     @Override
     public int resize() {
-        int newCapacity = capacity * 2;
-        Entry<K, V>[] newTable = new Entry[newCapacity];
-        for (int i = 0; i < newTable.length; i++) {
-            newTable[i] = new Entry<>(EntryState.EMPTY);
-        }
+        Entry<K, V>[] oldTable = table;
 
+        capacity = capacity * 2;
+        table = new Entry[capacity];
         for (int i = 0; i < table.length; i++) {
-            newTable[i] = table[i];
+            table[i] = new Entry<K, V>(EntryState.EMPTY);
         }
 
-        this.table = newTable;
-        this.capacity = newCapacity;
+        for (Entry<K, V> entry : oldTable) {
+            if (EntryState.OCCUPIUED.equals(entry.state)) {
+                int newIndex = handleCollision(hash(entry.key));
+                table[newIndex] = entry;
+            }
+        }
 
-        return newCapacity;
+        return capacity;
     }
+
+    /**
+     * Handles hash collisions. Classes extending {@code this} must implement
+     * this method according to their hashing strategy.
+     * 
+     * @param initialIndex where the hash function would put the key
+     * @return the smallest {@code int i} that is greater or equal to {@code initialIndex} and
+     *         {@code table[i].state != EntryState.OCCUPIED}
+     */
+    protected abstract int handleCollision(int initialIndex);
 }

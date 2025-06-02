@@ -19,9 +19,15 @@ public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V>
         this(DEFAULT_CAPACITY, DEFAULT_LAMBDA_VALUE);
     }
 
-    public OurAbstractHashMap(int capacity, float loadFactor) {
+    /**
+     * Instatiates an empty hashmap.
+     * 
+     * @param capacity the number of buckets (capacity of the hash table)
+     * @param lambda the load factor for balancing
+     */
+    public OurAbstractHashMap(int capacity, float lambda) {
         this.capacity = capacity;
-        this.lambda = loadFactor;
+        this.lambda = lambda;
         this.table = new Entry[capacity];
 
         for (int i = 0; i < table.length; i++) {
@@ -30,9 +36,6 @@ public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V>
 
         this.size = 0;
     }
-
-    /* TODO add method/constructor not to be used by user but for when the load-factor
-     demands re-calibration */
 
     @Override
     public int size() {
@@ -88,5 +91,23 @@ public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V>
         }
 
         return result;
+    }
+
+    @Override
+    public int resize() {
+        int newCapacity = capacity * 2;
+        Entry<K, V>[] newTable = new Entry[newCapacity];
+        for (int i = 0; i < newTable.length; i++) {
+            newTable[i] = new Entry<>(EntryState.EMPTY);
+        }
+
+        for (int i = 0; i < table.length; i++) {
+            newTable[i] = table[i];
+        }
+
+        this.table = newTable;
+        this.capacity = newCapacity;
+
+        return newCapacity;
     }
 }

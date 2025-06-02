@@ -19,6 +19,14 @@ public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V>
         this(DEFAULT_CAPACITY, DEFAULT_LAMBDA_VALUE);
     }
 
+    public OurAbstractHashMap(int capacity) {
+        this(capacity, DEFAULT_LAMBDA_VALUE);
+    }
+
+    public OurAbstractHashMap(float lambda) {
+        this(DEFAULT_CAPACITY, lambda);
+    }
+
     /**
      * Instatiates an empty hashmap.
      * 

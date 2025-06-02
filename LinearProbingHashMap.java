@@ -22,7 +22,7 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
         table[index] = new Entry<K, V>(key, value);
         size++;
-        if (lambda < size / capacity) resize();
+        if ((float) size / capacity >= lambda) resize();
         return false;
     }
 

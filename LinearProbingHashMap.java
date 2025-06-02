@@ -10,7 +10,6 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
     @Override
     public boolean insert(K key, V value) {
         int index = hash(key);
-        final int initIndex = index;
         // is it a collision (did something different hash to the same value)?
         boolean collision = !key.equals(table[index].key);
 
@@ -20,13 +19,12 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         } else {
             while (EntryState.OCCUPIUED.equals(table[index].state)) {
                 index = (index + 1) % capacity;
-                // TODO infinite loop may occur
-                if (index == initIndex) throw new UnsupportedOperationException("Fumbled the bag");
             }
         }
 
         table[index] = new Entry<K, V>(key, value);
         size++;
+        if (lambda < size / capacity) resize();
         return false;
     }
 

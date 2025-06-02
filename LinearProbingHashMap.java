@@ -1,6 +1,3 @@
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
     public LinearProbingHashMap() {
         super();
@@ -77,61 +74,4 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
         return true;
     }
-
-    @Override
-    public int size() {
-        return this.size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return this.size == 0;
-    }
-
-    @Override
-    public boolean clear() {
-        boolean result = !isEmpty();
-
-        for (int i = 0; i < table.length; i++) {
-            table[i] = new Entry<K, V>(EntryState.EMPTY);
-        }
-
-        return result;
-    }
-
-    @Override
-    public Iterator<Entry<K, V>> items() {
-        return new Iterator<Entry<K, V>>() {
-            private int index = 0;
-
-            @Override
-            public boolean hasNext() {
-                while (index < table.length && table[index].key == null) {
-                    index++;
-                }
-                return index < table.length;
-            }
-
-            @Override
-            public Entry<K, V> next() {
-                if (!hasNext()) {
-                    throw new NoSuchElementException();
-                }
-
-                // skips to the next element immediately to avoid infinite loop in hasNext
-                return table[index++];
-            }
-        };
-    }
-
-    @Override
-    public int hash(K key) {
-        int result = key.hashCode() % capacity;
-        if (result < 0) {
-            result += capacity;
-        }
-
-        return result;
-    }
-    
 }

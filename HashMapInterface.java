@@ -44,4 +44,10 @@ public interface HashMapInterface<K, V> {
     public Iterator<Entry<K, V>> items();
 
     public int hash(K key);
+
+    /**
+     * Resizes the hash map.
+     * Returns the capacity of the new hash table.
+     */
+    public int resize();
 }

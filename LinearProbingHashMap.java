@@ -84,14 +84,18 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
     @Override
     public boolean isEmpty() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isEmpty'");
+        return this.size == 0;
     }
 
     @Override
     public boolean clear() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'clear'");
+        boolean result = !isEmpty();
+
+        for (int i = 0; i < table.length; i++) {
+            table[i] = new Entry<K, V>(EntryState.EMPTY);
+        }
+
+        return result;
     }
 
     @Override

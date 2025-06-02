@@ -17,9 +17,7 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
             table[index].value = value;
             return true;
         } else {
-            while (EntryState.OCCUPIUED.equals(table[index].state)) {
-                index = (index + 1) % capacity;
-            }
+            handleCollision(index);
         }
 
         table[index] = new Entry<K, V>(key, value);
@@ -71,5 +69,14 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         }
 
         return true;
+    }
+
+    @Override
+    protected int handleCollision(int index) {
+        while (EntryState.OCCUPIUED.equals(table[index].state)) {
+            index = (index + 1) % capacity;
+        }
+
+        return index;
     }
 }

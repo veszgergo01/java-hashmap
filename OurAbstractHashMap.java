@@ -112,7 +112,7 @@ public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V>
         }
 
         for (Entry<K, V> entry : oldTable) {
-            if (EntryState.OCCUPIUED.equals(entry.state)) {
+            if (EntryState.OCCUPIED.equals(entry.state)) {
                 int newIndex = handleCollision(hash(entry.key));
                 table[newIndex] = entry;
             }

@@ -9,7 +9,7 @@ public class Entry<K, V> {
     public Entry(K key, V value) {
         this.key = key;
         this.value = value;
-        state = EntryState.OCCUPIUED;
+        state = EntryState.OCCUPIED;
     }
 
     /**
@@ -18,7 +18,7 @@ public class Entry<K, V> {
      * @throws IllegalArgumentException if {@code entryState == EntryState.OCCUPIED}
      */
     public Entry(EntryState entryState) {
-        if (entryState.equals(EntryState.OCCUPIUED)) {
+        if (entryState.equals(EntryState.OCCUPIED)) {
             throw new IllegalArgumentException("Cannot create an falsely occupied entry.");
         }
 

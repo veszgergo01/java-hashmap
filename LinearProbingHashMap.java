@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
     public LinearProbingHashMap() {
@@ -100,8 +101,27 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
     @Override
     public Iterator<Entry<K, V>> items() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'items'");
+        return new Iterator<Entry<K, V>>() {
+            private int index = 0;
+
+            @Override
+            public boolean hasNext() {
+                while (index < table.length && table[index].key == null) {
+                    index++;
+                }
+                return index < table.length;
+            }
+
+            @Override
+            public Entry<K, V> next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+
+                // skips to the next element immediately to avoid infinite loop in hasNext
+                return table[index++];
+            }
+        };
     }
 
     @Override

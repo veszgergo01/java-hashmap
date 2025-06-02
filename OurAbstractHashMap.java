@@ -10,6 +10,8 @@ public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V>
     protected int capacity;
     protected Entry<K, V>[] table;
 
+    protected int size;
+
     protected V empty;
     protected V tombstone;
 
@@ -25,6 +27,8 @@ public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V>
         for (int i = 0; i < table.length; i++) {
             table[i] = new Entry<K, V>(EntryState.EMPTY);
         }
+
+        this.size = 0;
     }
 
     /* TODO add method/constructor not to be used by user but for when the load-factor

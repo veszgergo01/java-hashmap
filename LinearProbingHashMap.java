@@ -28,6 +28,7 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         }
 
         table[index] = new Entry<K, V>(key, value);
+        size++;
         return false;
     }
 
@@ -45,6 +46,7 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         table[index].key = null;
         table[index].key = null;
         table[index].state = EntryState.TOMBSTONE;
+        size--;
         return true;
     }
 
@@ -77,8 +79,7 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
     @Override
     public int size() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'size'");
+        return this.size;
     }
 
     @Override

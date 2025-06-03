@@ -57,8 +57,20 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         this.size = 0;
     }
 
-    // TODO insert can be put here, as handleCollision has custom implementations
+    @Override
+    public boolean insert(K key, V value) {
+        // First step needed to determine if key was already in there
+        int index = hash(key);
+        boolean collision = !key.equals(table[index].key);
+        index = handleCollision(index);
 
+        table[index] = new Entry<K, V>(key, value);
+        size++;
+        if ((float) size / capacity >= lambda) resize();
+
+        return collision;
+    }
+    
     @Override
     public int size() {
         return this.size;

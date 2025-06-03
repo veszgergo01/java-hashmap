@@ -8,25 +8,6 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
     }
 
     @Override
-    public boolean insert(K key, V value) {
-        int index = hash(key);
-        // is it a collision (did something different hash to the same value)?
-        boolean collision = !key.equals(table[index].key);
-
-        if (!collision) { // key was already in there
-            table[index].value = value;
-            return true;
-        } else {
-            index = handleCollision(index);
-        }
-
-        table[index] = new Entry<K, V>(key, value);
-        size++;
-        if ((float) size / capacity >= lambda) resize();
-        return false;
-    }
-
-    @Override
     public boolean delete(K key) {
         int index = hash(key);
 

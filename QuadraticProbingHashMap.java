@@ -8,34 +8,6 @@ public class QuadraticProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
     }
 
     @Override
-    public boolean insert(K key, V value) {
-        int baseIndex = hash(key);
-        int index;
-
-        // Check if key already exists using quadratic probing
-        for (int i = 0; i < capacity; i++) {
-            index = (baseIndex + i * i) % capacity;
-
-            // If the key already exists, update its value and return true
-            if (table[index].state == EntryState.OCCUPIED && key.equals(table[index].key)) {
-                table[index].value = value;
-                return true; // updated value
-            }
-        }
-
-        // If the key was not found, we use handleCollision to find the first available slot
-        index = handleCollision(baseIndex);
-
-        // Insert the new entry at the available slot
-        table[index] = new Entry<>(key, value);
-        size++;
-
-        if ((float) size / capacity >= lambda) resize();
-        return false;
-    }
-
-
-    @Override
     public boolean delete(K key) {
         if (!has(key)) return false;
 

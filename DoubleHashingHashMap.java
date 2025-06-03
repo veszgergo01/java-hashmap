@@ -4,22 +4,6 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
     private StringHasher<K> sh = new StringHasher<>();
 
     @Override
-    public boolean insert(K key, V value) {
-        int index = handleCollision(hash(key));
-        boolean collision = !key.equals(table[index].key);
-
-        if (!collision) {
-            table[index].value = value;
-            return true;
-        }
-
-        table[index] = new Entry<K, V>(key, value);
-        size++;
-        if ((float) size / capacity >= lambda) resize();
-        return false;
-    }
-
-    @Override
     public boolean delete(K key) {
         int index = hash(key);
 

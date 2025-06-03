@@ -1,6 +1,6 @@
 import java.util.Iterator;
 
-public interface HashMapInterface<K, V> {
+public interface OurMapInterface<K, V> {
     /**
      * Inserts {@code value} under the hash of {@code key}.
      * @return true if the key was already present in the set, false otherwise.

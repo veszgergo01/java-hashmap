@@ -1,14 +1,11 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import Hashing.StringHasher;
-import Hashing.StringHasher.HashStrategy;
-
 /**
  * Abstract class for overarching variables, methods and basic constructors.
  * Extending classes will add precise implementation details (e.g. hashing strategies).
  */
-public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V> {
+public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> {
     public static final int DEFAULT_CAPACITY = 16;
     public static final float DEFAULT_LAMBDA_VALUE = 0.75f;
     public static final HashStrategy DEFAULT_HASHING_STRATEGY = HashStrategy.JAVA_DEFAULT;
@@ -59,6 +56,8 @@ public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V>
 
         this.size = 0;
     }
+
+    // TODO insert can be put here, as handleCollision has custom implementations
 
     @Override
     public int size() {

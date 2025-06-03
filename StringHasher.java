@@ -1,13 +1,4 @@
-package Hashing;
-
 public class StringHasher<T> {
-    public enum HashStrategy {
-        JAVA_DEFAULT,
-        STRING_FOLDING,
-        SIMPLE_STRATEGY;
-        // TODO multi-hash-function
-    }
-
     public final HashStrategy DEFAULT_HASH_FUNCTION = HashStrategy.JAVA_DEFAULT;
     
 

@@ -1,6 +1,3 @@
-import Hashing.StringHasher;
-import Hashing.StringHasher.HashStrategy;
-
 public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
     private int eye = 1; // "i" in the slides, just didn't want to use i because it's a common index

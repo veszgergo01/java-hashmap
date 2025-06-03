@@ -1,9 +1,6 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import Hashing.StringHasher;
-import Hashing.StringHasher.HashStrategy;
-
 /**
  * Abstract class for overarching variables, methods and basic constructors.
  * Extending classes will add precise implementation details (e.g. hashing strategies).

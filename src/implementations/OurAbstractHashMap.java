@@ -15,9 +15,9 @@ import src.definitions.EntryState;
  * Extending classes will add precise implementation details (e.g. hashing strategies).
  */
 public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> {
-    public static final int DEFAULT_CAPACITY = 16;
+    public static final int DEFAULT_CAPACITY = 5;
     public static final float DEFAULT_LAMBDA_VALUE = 0.75f;
-    public static final HashStrategy DEFAULT_HASHING_STRATEGY = HashStrategy.JAVA_DEFAULT;
+    public static final HashStrategy DEFAULT_HASHING_STRATEGY = HashStrategy.values()[0];
 
     protected float lambda;
     protected int capacity;
@@ -73,7 +73,8 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         boolean collision = !key.equals(table[index].key);
         index = handleCollision(index);
 
-        table[index] = new Entry<K, V>(key, value);
+        table[index].key = key;
+        table[index].value = value;
         size++;
         if ((float) size / capacity >= lambda) resize();
 
@@ -128,7 +129,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
 
     @Override
     public int hash(K key) {
-        return new StringHasher<K>().hash(key, capacity);
+        return new StringHasher<K>().hash(key, hashStrategy, capacity);
     }
 
     @Override
@@ -142,13 +143,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
             table[i] = new Entry<K, V>(EntryState.EMPTY);
         }
 
-        // Rehash
-        for (Entry<K, V> entry : oldTable) {
-            if (EntryState.OCCUPIED.equals(entry.state)) {
-                int newIndex = handleCollision(hash(entry.key));
-                table[newIndex] = entry;
-            }
-        }
+        rehash(oldTable);
 
         return capacity;
     }
@@ -162,4 +157,21 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
      *         {@code table[i].state != EntryState.OCCUPIED}
      */
     protected abstract int handleCollision(int initialIndex);
+
+    /**
+     * Reconstructs the hash table. The method may be called when the table is
+     * resized or when the hash function changes.
+     * 
+     * @modifies {@code this.table} 
+     * 
+     * @param oldTable the original state of the table
+     */
+    protected void rehash(Entry<K, V>[] oldTable) {
+        for (Entry<K, V> entry : oldTable) {
+            if (EntryState.OCCUPIED.equals(entry.state)) {
+                // FIXME cannot use insert here, because the size variable will be increased but it shouldnt be
+                insert(entry.key, entry.value);
+            }
+        }
+    }
 }

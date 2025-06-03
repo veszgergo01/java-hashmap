@@ -1,5 +1,8 @@
+import src.definitions.OurMapInterface;
+import src.implementations.LinearProbingHashMap;
+
 class Main {
     public static void main(String[] args) {
-        System.out.println("xd");
+        OurMapInterface<String, Integer> map = new LinearProbingHashMap<>();
     }
 }

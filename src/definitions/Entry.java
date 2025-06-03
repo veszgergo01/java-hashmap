@@ -1,3 +1,4 @@
+package src.definitions;
 public class Entry<K, V> {
     public K key;
     public V value;
@@ -19,7 +20,7 @@ public class Entry<K, V> {
      */
     public Entry(EntryState entryState) {
         if (entryState.equals(EntryState.OCCUPIED)) {
-            throw new IllegalArgumentException("Cannot create an falsely occupied entry.");
+            throw new IllegalArgumentException("Cannot create a falsely occupied entry.");
         }
 
         this.state = entryState;

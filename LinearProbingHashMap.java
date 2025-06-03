@@ -17,7 +17,7 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
             table[index].value = value;
             return true;
         } else {
-            handleCollision(index);
+            index = handleCollision(index);
         }
 
         table[index] = new Entry<K, V>(key, value);

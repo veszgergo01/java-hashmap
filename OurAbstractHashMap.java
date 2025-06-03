@@ -1,6 +1,9 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import Hashing.StringHasher;
+import Hashing.StringHasher.HashStrategy;
+
 /**
  * Abstract class for overarching variables, methods and basic constructors.
  * Extending classes will add precise implementation details (e.g. hashing strategies).
@@ -8,23 +11,33 @@ import java.util.NoSuchElementException;
 public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V> {
     public static final int DEFAULT_CAPACITY = 16;
     public static final float DEFAULT_LAMBDA_VALUE = 0.75f;
+    public static final HashStrategy DEFAULT_HASHING_STRATEGY = HashStrategy.JAVA_DEFAULT;
 
     protected float lambda;
     protected int capacity;
+    protected HashStrategy hashStrategy;
     protected Entry<K, V>[] table;
 
     protected int size;
 
     public OurAbstractHashMap() {
-        this(DEFAULT_CAPACITY, DEFAULT_LAMBDA_VALUE);
+        this(DEFAULT_CAPACITY, DEFAULT_LAMBDA_VALUE, DEFAULT_HASHING_STRATEGY);
     }
 
     public OurAbstractHashMap(int capacity) {
-        this(capacity, DEFAULT_LAMBDA_VALUE);
+        this(capacity, DEFAULT_LAMBDA_VALUE, DEFAULT_HASHING_STRATEGY);
     }
 
     public OurAbstractHashMap(float lambda) {
-        this(DEFAULT_CAPACITY, lambda);
+        this(DEFAULT_CAPACITY, lambda, DEFAULT_HASHING_STRATEGY);
+    }
+
+    public OurAbstractHashMap(int capacity, float lambda) {
+        this(capacity, lambda, DEFAULT_HASHING_STRATEGY);
+    }
+
+    public OurAbstractHashMap(HashStrategy hashStrategy) {
+        this(DEFAULT_CAPACITY, DEFAULT_LAMBDA_VALUE, hashStrategy);
     }
 
     /**
@@ -32,10 +45,12 @@ public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V>
      * 
      * @param capacity the number of buckets (capacity of the hash table)
      * @param lambda the load factor for balancing
+     * @param hashStrategy the hashing strategy to be used (see {@link HashStrategy})
      */
-    public OurAbstractHashMap(int capacity, float lambda) {
+    public OurAbstractHashMap(int capacity, float lambda, HashStrategy hashStrategy) {
         this.capacity = capacity;
         this.lambda = lambda;
+        this.hashStrategy = hashStrategy;
         this.table = new Entry[capacity];
 
         for (int i = 0; i < table.length; i++) {
@@ -93,24 +108,21 @@ public abstract class OurAbstractHashMap<K, V> implements HashMapInterface<K, V>
 
     @Override
     public int hash(K key) {
-        int result = key.hashCode() % capacity;
-        if (result < 0) {
-            result += capacity;
-        }
-
-        return result;
+        return new StringHasher<K>().hash(key, capacity);
     }
 
     @Override
     public int resize() {
         Entry<K, V>[] oldTable = table;
 
+        // Initialize new table
         capacity = capacity * 2;
         table = new Entry[capacity];
         for (int i = 0; i < table.length; i++) {
             table[i] = new Entry<K, V>(EntryState.EMPTY);
         }
 
+        // Rehash
         for (Entry<K, V> entry : oldTable) {
             if (EntryState.OCCUPIED.equals(entry.state)) {
                 int newIndex = handleCollision(hash(entry.key));

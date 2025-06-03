@@ -1,3 +1,7 @@
+package src.implementations;
+
+import src.definitions.EntryState;
+
 public class QuadraticProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
     public QuadraticProbingHashMap() {
         super();

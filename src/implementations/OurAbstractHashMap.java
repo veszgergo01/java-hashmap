@@ -1,5 +1,14 @@
+package src.implementations;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import src.hashing.HashStrategy;
+import src.hashing.StringHasher;
+
+import src.definitions.OurMapInterface;
+
+import src.definitions.Entry;
+import src.definitions.EntryState;
 
 /**
  * Abstract class for overarching variables, methods and basic constructors.
@@ -70,7 +79,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
 
         return collision;
     }
-    
+
     @Override
     public int size() {
         return this.size;

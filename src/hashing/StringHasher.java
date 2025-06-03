@@ -1,3 +1,4 @@
+package src.hashing;
 public class StringHasher<T> {
     public final HashStrategy DEFAULT_HASH_FUNCTION = HashStrategy.JAVA_DEFAULT;
     

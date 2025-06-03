@@ -1,3 +1,4 @@
+package src.definitions;
 import java.util.Iterator;
 
 public interface OurMapInterface<K, V> {

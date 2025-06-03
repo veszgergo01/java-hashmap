@@ -1,7 +1,15 @@
-public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
+package src.implementations;
 
-    private int eye = 1; // "i" in the slides, just didn't want to use i because it's a common index
-    private StringHasher<K> sh = new StringHasher<>();
+import src.definitions.EntryState;
+
+public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
+    public LinearProbingHashMap() {
+        super();
+    }
+
+    public LinearProbingHashMap(int capacity, float loadFactor) {
+        super(capacity, loadFactor);
+    }
 
     @Override
     public boolean delete(K key) {
@@ -9,11 +17,10 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
         if (!has(key)) return false;
 
+        /** Guaranteed to halt, due to contract of {@code this#has()} */
         while (!key.equals(table[index].key)) {
-            index = (index + eye * sh.hash(key, capacity)) % capacity;
-            eye++;
+            index = (index + 1) % capacity;
         }
-        eye = 1;
 
         table[index].key = null;
         table[index].value = null;
@@ -28,11 +35,10 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
         if (!has(key)) return null;
 
+        /** Guaranteed to halt, due to contract of {@code this#has()} */
         while (!key.equals(table[index].key)) {
-            index = (index + eye * sh.hash(key, capacity)) % capacity;
-            eye++;
+            index = (index + 1) % capacity;
         }
-        eye = 1;
 
         return table[index].value;
     }
@@ -43,27 +49,18 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         final int initIndex = index;
 
         while (!key.equals(table[index].key)) {
-            index = (index + eye * sh.hash(key, capacity)) % capacity;
-            eye++;
+            index = (index + 1) % capacity;
             if (index == initIndex) return false;
         }
-        eye = 1;
 
         return true;
     }
 
     @Override
     protected int handleCollision(int index) {
-        int initialIndex = index;
         while (EntryState.OCCUPIED.equals(table[index].state)) {
-            index = (index + eye * sh.hash(table[index].key, capacity)) % capacity;
-            eye++;
-            // If we have generated all possible indices in the ring, we will not
-            // be able to resolve the hash collision within this set, so we need
-            // to expand it
-            if (initialIndex == index) resize();
+            index = (index + 1) % capacity;
         }
-        eye = 1;
 
         return index;
     }

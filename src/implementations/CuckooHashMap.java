@@ -86,20 +86,46 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
     @Override
     public boolean delete(K key) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        int index1 = sh.hash(key, hashStrategy, capacity);
+        int index2 = sh.hash(key, hashStrategy2, capacity);
+
+        if (key.equals(table[index1].key)) {
+            table[index1].key = null;
+            table[index1].value = null;
+            table[index1].state = EntryState.TOMBSTONE;
+            return true;
+        }
+
+        if (key.equals(table[index2].key)) {
+            table[index2].key = null;
+            table[index2].value = null;
+            table[index2].state = EntryState.TOMBSTONE;
+            return true;
+        }
+
+        return false;
     }
 
     @Override
     public V get(K key) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'get'");
+        if (!has(key)) return null;
+
+        int index1 = sh.hash(key, hashStrategy, capacity);
+        int index2 = sh.hash(key, hashStrategy2, capacity);
+
+        if (key.equals(table[index1].key)) {
+            return table[index1].value;
+        } else {
+            return table[index2].value;
+        }
     }
 
     @Override
     public boolean has(K key) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'has'");
+        int index1 = sh.hash(key, hashStrategy, capacity);
+        int index2 = sh.hash(key, hashStrategy2, capacity);
+
+        return key.equals(table[index1].key) || key.equals(table[index2].key);
     }
 
     @Override

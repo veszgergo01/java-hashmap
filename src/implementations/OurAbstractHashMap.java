@@ -3,7 +3,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import src.hashing.HashStrategy;
-import src.hashing.StringHasher;
+import src.hashing.Hasher;
 
 import src.definitions.OurMapInterface;
 
@@ -133,7 +133,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
 
     @Override
     public int hash(K key) {
-        return new StringHasher<K>().hash(key, hashStrategy, capacity);
+        return new Hasher<K>().hash(key, hashStrategy, capacity);
     }
 
     @Override

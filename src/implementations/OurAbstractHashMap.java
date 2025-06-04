@@ -3,7 +3,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import src.hashing.HashStrategy;
-import src.hashing.StringHasher;
+import src.hashing.Hasher;
 
 import src.definitions.OurMapInterface;
 
@@ -60,7 +60,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         this.table = new Entry[capacity];
 
         for (int i = 0; i < table.length; i++) {
-            table[i] = new Entry<K, V>(EntryState.EMPTY);
+            table[i] = new Entry<K, V>();
         }
 
         this.size = 0;
@@ -100,10 +100,11 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         boolean result = !isEmpty();
 
         for (int i = 0; i < table.length; i++) {
-            table[i] = new Entry<K, V>(EntryState.EMPTY);
+            table[i] = new Entry<K, V>();
         }
 
         size = 0;
+        capacity = DEFAULT_CAPACITY;
 
         return result;
     }
@@ -135,7 +136,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
 
     @Override
     public int hash(K key) {
-        return new StringHasher<K>().hash(key, hashStrategy, capacity);
+        return new Hasher<K>().hash(key, hashStrategy, capacity);
     }
 
     @Override
@@ -146,7 +147,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         capacity = capacity * 2;
         table = new Entry[capacity];
         for (int i = 0; i < table.length; i++) {
-            table[i] = new Entry<K, V>(EntryState.EMPTY);
+            table[i] = new Entry<K, V>();
         }
 
         rehash(oldTable);

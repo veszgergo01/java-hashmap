@@ -1,12 +1,12 @@
 package src.implementations;
 
 import src.definitions.EntryState;
-import src.hashing.StringHasher;
+import src.hashing.Hasher;
 
 public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
     private int eye = 1; // "i" in the slides, just didn't want to use i because it's a common index
-    private StringHasher<K> sh = new StringHasher<>();
+    private Hasher<K> sh = new Hasher<>();
 
     @Override
     public boolean delete(K key) {

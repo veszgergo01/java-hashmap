@@ -3,7 +3,7 @@ package src.implementations;
 import src.definitions.Entry;
 import src.definitions.EntryState;
 import src.hashing.HashStrategy;
-import src.hashing.StringHasher;
+import src.hashing.Hasher;
 
 public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
@@ -16,7 +16,7 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
     /** Points to the next unused strategy in {@link AVAILABLE_HASH_STRATEGIES} */
     private int availableStrategiesIndex = 2; // The first two strategies are being used
 
-    private StringHasher<K> sh = new StringHasher<>();
+    private Hasher<K> sh = new Hasher<>();
     private HashStrategy hashStrategy2;
     /** Prevents infinite loops. */ // TODO is there a more elegant solution? Maybe research better, dynamic numbers for this
     private static final int MAX_LOOP = 32;

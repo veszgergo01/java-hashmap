@@ -18,6 +18,8 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
     private StringHasher<K> sh = new StringHasher<>();
     private HashStrategy hashStrategy2;
+    /** Prevents infinite loops. */ // TODO is there a more elegant solution? Maybe research better, dynamic numbers for this
+    private static final int MAX_LOOP = 32;
 
     public CuckooHashMap() {
         this(DEFAULT_HASHING_STRATEGY, HashStrategy.values()[1]);
@@ -36,8 +38,10 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
     @Override
     public boolean insert(K key, V value) {
         Entry<K, V> newEntry = new Entry<>(key, value);
+        Entry<K, V> initialEntry = newEntry;
+        int countLoop = 0;
 
-        for (int i = 0; i < capacity; i++) {
+        do {
             int index1 = sh.hash(key, hashStrategy, capacity);
             // Empty: no worries
             if (EntryState.OCCUPIED != table[index1].state) {
@@ -77,10 +81,12 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
             key = evictedEntry.key;
             value = evictedEntry.value;
             newEntry = evictedEntry;
-        }
+
+            if (countLoop++ > MAX_LOOP) break;
+        } while (!initialEntry.equals(newEntry));
 
         // If we get here, we needed to try too many times, so rehash and retry.
-        rehash(table);
+        resize(); // TODO could i simply use rehash here? i tried to but the stack kept overflowing...
         return insert(key, value);
     }
 

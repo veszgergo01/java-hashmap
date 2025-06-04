@@ -5,6 +5,13 @@ public class Entry<K, V> {
     public EntryState state;
 
     /**
+     * Creates an empty Entry.
+     */
+    public Entry() {
+        this(EntryState.EMPTY);
+    }
+
+    /**
      * This constructor builds an Entry (key-value pair) naturally.
      */
     public Entry(K key, V value) {

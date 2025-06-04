@@ -71,8 +71,11 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         // First step needed to determine if key was already in there
         int index = hash(key);
         boolean collision = !key.equals(table[index].key);
-        index = handleCollision(index);
-
+        
+        if (collision) {
+            index = handleCollision(index);
+        }
+        
         table[index].key = key;
         table[index].value = value;
         table[index].state = EntryState.OCCUPIED;

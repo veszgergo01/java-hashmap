@@ -21,7 +21,7 @@ public class QuadraticProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         for (int i = 0; i < capacity; i++) {
             index = (baseIndex + i * i) % capacity;
 
-            if (key.equals(table[index].key)) {
+            if (table[index].state == EntryState.OCCUPIED && key.equals(table[index].key)) {
                 table[index].key = null;
                 table[index].value = null;
                 table[index].state = EntryState.TOMBSTONE;

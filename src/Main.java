@@ -1,34 +1,73 @@
 package src;
-import java.util.Iterator;
-
-import javax.sound.sampled.Line;
 
 import src.definitions.Entry;
 import src.definitions.OurMapInterface;
-import src.implementations.CuckooHashMap;
-import src.implementations.DoubleHashingHashMap;
-import src.implementations.LinearProbingHashMap;
 import src.implementations.QuadraticProbingHashMap;
+import src.implementations.RobinHoodHashMap;
 
-class Main {
+public class Main {
     public static void main(String[] args) {
-        OurMapInterface<String, Integer> map = new CuckooHashMap<>();
+        OurMapInterface<String, Integer> map = new RobinHoodHashMap<>(8, 0.75f);
 
-        for (int i = 0; i < 22; i++) {
-            map.insert(String.format("%d", i), i);
+        // System.out.println("=== INSERT TESTS ===");
+        // map.insert("A", 1);
+        // map.insert("B", 2);
+        // map.insert("C", 3);
+        // map.insert("A", 100);  // update A
+
+        // System.out.println("A = " + map.get("A")); // expect 100
+        // System.out.println("B = " + map.get("B")); // expect 2
+        // System.out.println("Z = " + map.get("Z")); // expect null
+        // System.out.println("Has C? " + map.has("C")); // expect true
+        // System.out.println("Has Z? " + map.has("Z")); // expect false
+
+        // System.out.println("\n=== DELETE TESTS ===");
+        // System.out.println("Deleting B...");
+        // map.delete("B");
+        // System.out.println("Has B? " + map.has("B")); // expect false
+        // System.out.println("B = " + map.get("B"));     // expect null
+
+        // System.out.println("\n=== COLLISION TESTS ===");
+        // map.insert("X", 9);
+        // map.insert("Y", 10);
+        // map.insert("Z", 11);
+        // map.insert("W", 12);  // likely to cause quadratic probing
+
+        // System.out.println("X = " + map.get("X"));
+        // System.out.println("Y = " + map.get("Y"));
+        // System.out.println("Z = " + map.get("Z"));
+        // System.out.println("W = " + map.get("W"));
+
+        // System.out.println("\nUpdating X...");
+        // map.insert("X", 99);
+        // System.out.println("X = " + map.get("X")); // expect 99
+
+        map.insert("Aa", 1);
+        map.insert("BB", 2);
+        map.insert("A", 1);
+        int size = map.size();
+        System.out.println("Size: " + size);
+        map.insert("B", 1);
+        map.insert("AaAa", 3);
+        map.insert("C", 1);
+        map.insert("AaAa", 7);
+
+        
+        System.out.println("\n=== FINAL MAP CONTENTS ===");
+        for (Entry<String, Integer> entry : (Iterable<Entry<String, Integer>>) map::items) {
+            System.out.println(entry.key + " -> " + entry.value);
         }
-
-        map.insert("FB", 2);
-        map.insert("Ea", 4);
-
-        // map.delete("5");
-
-        // Iterator<Entry<String, Integer>> it = map.items();
-        // while (it.hasNext()) {
-        //     Entry<String, Integer> entry = it.next();
-        //     System.out.println(String.format("%s: %s", entry.key, entry.value));
-        // }
-
-        System.out.println("finito");
+        size = map.size();
+        System.out.println("Size: " + size);
+        System.out.println("All output above should match expected values.");
+        map.clear();
+        size = map.size();
+        System.out.println("Size: " + size);
+        boolean empty = map.isEmpty();
+        System.out.println("Empty?: " + empty);
+        System.out.println("\n=== FINAL MAP CONTENTS ===");
+        for (Entry<String, Integer> entry : (Iterable<Entry<String, Integer>>) map::items) {
+            System.out.println(entry.key + " -> " + entry.value);
+        }
     }
 }

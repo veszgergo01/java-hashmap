@@ -90,7 +90,7 @@ public class RobinHoodHashMap<K, V> extends LinearProbingHashMap<K, V> {
                     if (distFromHome > 0) {
                         // Shift entry back
                         table[probeIndex] = table[j];
-                        table[j] = new Entry<>(EntryState.EMPTY);
+                        table[j] = new Entry<>();
                         probeIndex = j;
                     } else {
                         break;

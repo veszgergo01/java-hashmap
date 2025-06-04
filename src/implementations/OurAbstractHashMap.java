@@ -60,7 +60,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         this.table = new Entry[capacity];
 
         for (int i = 0; i < table.length; i++) {
-            table[i] = new Entry<K, V>(EntryState.EMPTY);
+            table[i] = new Entry<K, V>();
         }
 
         this.size = 0;
@@ -97,7 +97,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         boolean result = !isEmpty();
 
         for (int i = 0; i < table.length; i++) {
-            table[i] = new Entry<K, V>(EntryState.EMPTY);
+            table[i] = new Entry<K, V>();
         }
 
         size = 0;
@@ -144,7 +144,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         capacity = capacity * 2;
         table = new Entry[capacity];
         for (int i = 0; i < table.length; i++) {
-            table[i] = new Entry<K, V>(EntryState.EMPTY);
+            table[i] = new Entry<K, V>();
         }
 
         rehash(oldTable);

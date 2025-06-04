@@ -101,6 +101,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         }
 
         size = 0;
+        capacity = DEFAULT_CAPACITY;
 
         return result;
     }

@@ -100,6 +100,8 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
             table[i] = new Entry<K, V>(EntryState.EMPTY);
         }
 
+        size = 0;
+
         return result;
     }
 

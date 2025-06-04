@@ -50,8 +50,6 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
             // Just updating the value
             if (table[index1].key.equals(key)) {
                 table[index1].value = value;
-                size++;
-                if ((float) size / capacity >= lambda) resize();
                 return true;
             }
 

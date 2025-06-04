@@ -11,6 +11,10 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
     // Source: https://link.springer.com/chapter/10.1007/3-540-44676-1_10 TODO check
     // https://www.geeksforgeeks.org/cuckoo-hashing/ <-- definitely here
     public static final float DEFAULT_LAMBDA_VALUE = 0.5f;
+    private final HashStrategy[] AVAILABLE_HASH_STRATEGIES = HashStrategy.values();
+
+    /** Points to the next unused strategy in {@link AVAILABLE_HASH_STRATEGIES} */
+    private int availableStrategiesIndex = 2; // The first two strategies are being used
 
     private StringHasher<K> sh = new StringHasher<>();
     private HashStrategy hashStrategy2;
@@ -104,5 +108,16 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
     protected int handleCollision(int initialIndex) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'handleCollision'");
+    }
+
+    @Override
+    protected void rehash(Entry<K, V>[] oldTable) {
+        // Switch strategies
+        hashStrategy = AVAILABLE_HASH_STRATEGIES[availableStrategiesIndex % AVAILABLE_HASH_STRATEGIES.length];
+        hashStrategy2 = AVAILABLE_HASH_STRATEGIES[(availableStrategiesIndex + 1) % AVAILABLE_HASH_STRATEGIES.length];
+        
+        availableStrategiesIndex = (availableStrategiesIndex + 2) % AVAILABLE_HASH_STRATEGIES.length;
+
+        super.rehash(oldTable);
     }
 }

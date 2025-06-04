@@ -167,9 +167,10 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
      * @param oldTable the original state of the table
      */
     protected void rehash(Entry<K, V>[] oldTable) {
+        size = 0;
+
         for (Entry<K, V> entry : oldTable) {
             if (EntryState.OCCUPIED.equals(entry.state)) {
-                // FIXME cannot use insert here, because the size variable will be increased but it shouldnt be
                 insert(entry.key, entry.value);
             }
         }

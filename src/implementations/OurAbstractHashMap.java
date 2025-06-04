@@ -75,6 +75,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
 
         table[index].key = key;
         table[index].value = value;
+        table[index].state = EntryState.OCCUPIED;
         size++;
         if ((float) size / capacity >= lambda) resize();
 

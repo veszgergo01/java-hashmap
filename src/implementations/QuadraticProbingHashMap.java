@@ -87,6 +87,7 @@ public class QuadraticProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
             }
         }
 
-        throw new RuntimeException("No available slot found during collision handling (table may be full)");
+        resize();
+        return handleCollision(initialIndex);
     }
 }

@@ -1,9 +1,18 @@
 package src.implementations;
 
 import src.definitions.EntryState;
+import src.hashing.HashStrategy;
 import src.hashing.Hasher;
 
 public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
+
+    public DoubleHashingHashMap(float loadFactor) {
+        super(loadFactor);
+    }
+
+    public DoubleHashingHashMap(HashStrategy hashStrategy) {
+        super(hashStrategy);
+    }
 
     private int eye = 1; // "i" in the slides, just didn't want to use i because it's a common index
     private Hasher<K> sh = new Hasher<>();

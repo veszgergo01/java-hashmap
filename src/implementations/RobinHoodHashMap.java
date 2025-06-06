@@ -1,10 +1,20 @@
 package src.implementations;
 import src.definitions.EntryState;
+import src.hashing.HashStrategy;
+
 import src.definitions.Entry;
 
 public class RobinHoodHashMap<K, V> extends LinearProbingHashMap<K, V> {
     public RobinHoodHashMap() {
-        super();
+        this(DEFAULT_CAPACITY, DEFAULT_LAMBDA_VALUE);
+    }
+
+    public RobinHoodHashMap(float loadFactor) {
+        this(DEFAULT_CAPACITY, loadFactor);
+    }
+
+    public RobinHoodHashMap(HashStrategy hashStrategy) {
+        super(hashStrategy);
     }
 
     public RobinHoodHashMap(int capacity, float loadFactor) {

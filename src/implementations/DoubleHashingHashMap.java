@@ -15,7 +15,7 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         if (!has(key)) return false;
 
         while (!key.equals(table[index].key)) {
-            index = (index + eye * sh.hash(key, capacity)) % capacity;
+            index = calculateNewIndex(key, index);
             eye++;
         }
         eye = 1;
@@ -34,7 +34,7 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         if (!has(key)) return null;
 
         while (!key.equals(table[index].key)) {
-            index = (index + eye * sh.hash(key, capacity)) % capacity;
+            index = calculateNewIndex(key, index);
             eye++;
         }
         eye = 1;
@@ -48,7 +48,7 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         final int initIndex = index;
 
         while (!key.equals(table[index].key)) {
-            index = (index + eye * sh.hash(key, capacity)) % capacity;
+            index = calculateNewIndex(key, index);
             eye++;
             if (index == initIndex) return false;
         }
@@ -61,7 +61,7 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
     protected int handleCollision(int index) {
         int initialIndex = index;
         while (EntryState.OCCUPIED.equals(table[index].state)) {
-            index = (index + eye * sh.hash(table[index].key, capacity)) % capacity;
+            index = calculateNewIndex(table[index].key, index);
             eye++;
             // If we have generated all possible indices in the ring, we will not
             // be able to resolve the hash collision within this set, so we need
@@ -71,5 +71,9 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         eye = 1;
 
         return index;
+    }
+
+    private int calculateNewIndex(K key, int index) {
+        return (sh.hash(key, HashStrategy.JAVA_DEFAULT, capacity) + eye * sh.hash(key, HashStrategy.STRING_FOLDING, capacity)) % capacity;
     }
 }

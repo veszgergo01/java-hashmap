@@ -17,6 +17,15 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
     private int eye = 1; // "i" in the slides, just didn't want to use i because it's a common index
     private Hasher<K> sh = new Hasher<>();
 
+    // Ugly solution to solve OutOfMemoryException
+    private K currentInsertKey;
+
+    @Override
+    public boolean insert(K key, V value) {
+        this.currentInsertKey = key;
+        return super.insert(key, value);
+    }
+
     @Override
     public boolean delete(K key) {
         int index = hash(key);
@@ -69,20 +78,26 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
     @Override
     protected int handleCollision(int index) {
         int initialIndex = index;
-        while (EntryState.OCCUPIED.equals(table[index].state)) {
-            index = calculateNewIndex(table[index].key, index);
-            eye++;
-            // If we have generated all possible indices in the ring, we will not
-            // be able to resolve the hash collision within this set, so we need
-            // to expand it
-            if (initialIndex == index) resize();
-        }
-        eye = 1;
+        int probes = 0;
 
+        while (EntryState.OCCUPIED.equals(table[index].state)) {
+            index = calculateNewIndex(currentInsertKey, index);
+            eye++;
+            probes++;
+
+            if (probes >= capacity) {
+                resize();
+                index = hash(currentInsertKey);
+                eye = 1;
+            }
+        }
+
+        eye = 1;
         return index;
     }
 
+
     private int calculateNewIndex(K key, int index) {
-        return (sh.hash(key, HashStrategy.JAVA_DEFAULT, capacity) + eye * sh.hash(key, HashStrategy.STRING_FOLDING, capacity)) % capacity;
+        return (sh.hash(key, HashStrategy.JAVA_DEFAULT, capacity) + eye * sh.hash(key, HashStrategy.RELATIVE_PRIME, capacity)) % capacity;
     }
 }

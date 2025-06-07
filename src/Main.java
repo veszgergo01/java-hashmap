@@ -86,23 +86,30 @@ public class Main {
     private static void greg() {
         List<String[]> data = new ArrayList<>();
         float[] lambdas = {0.33f, 0.5f, 0.75f, 0.9f};
+        final int MAX_INSERT_ELEMENTS = (int) Math.pow(100, 5);
 
         for (float lambda : lambdas) {
             data.add(new String[]{"n=", "linear", "double", "quadratic", "robin", "cuckoo", "java"});
-            data.addAll(runWithLoadFactor(lambda));
+            for (int i = 100; i < MAX_INSERT_ELEMENTS; i *= 100) {
+                data.addAll(runWithLoadFactor(lambda, i));
+                System.out.println(String.format("Lambda done with n=%d", i));
+            }
 
             CSVManager.writeToCSV(String.format("output_lambda_%f.csv", lambda), data);
+            data.clear();
         }
-
-        data.clear();
 
         HashStrategy[] hashStrategies = HashStrategy.values();
 
         for (HashStrategy hashStrategy : hashStrategies) {
             data.add(new String[]{"n=", "linear", "double", "quadratic", "robin", "cuckoo", "java"});
-            data.addAll(runWithHashFunction(hashStrategy));
+            for (int i = 100; i < MAX_INSERT_ELEMENTS; i *= 100) {
+                data.addAll(runWithHashFunction(hashStrategy, i));
+                System.out.println(String.format("Hash function done with n=%d", i));
+            }
 
             CSVManager.writeToCSV(String.format("output_hashfunction_%s.csv", hashStrategy.toString().toLowerCase()), data);
+            data.clear();
         }
     }
 
@@ -117,10 +124,10 @@ public class Main {
     }
 
     /** Returns time in seconds to complete */
-    private static float insert(OurMapInterface<String, Integer> map) {
+    private static float insert(OurMapInterface<String, Integer> map, int times) {
         long startTime = System.nanoTime();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < times; i++) {
             Random rd = new Random();
             map.insert(getRandomString(), rd.nextInt(100));
         }
@@ -132,11 +139,11 @@ public class Main {
         return timeSpentSeconds;
     }
 
-    private static float insertRegularHashMap(float loadFactor) {
+    private static float insertRegularHashMap(float loadFactor, int times) {
         long startTime = System.nanoTime();
 
         Map<String, Integer> javaMap = new HashMap<>(16, loadFactor);
-        for (int i = 10; i < 5; i++) { 
+        for (int i = 10; i < times; i++) {
             Random rd = new Random();
             javaMap.put(getRandomString(), rd.nextInt(100));
         }
@@ -148,40 +155,30 @@ public class Main {
         return timeSpentSeconds;
     }
 
-    private static List<String[]> runWithLoadFactor(float loadFactor) {
+    private static List<String[]> runWithLoadFactor(float loadFactor, int n) {
         List<String[]> data = new ArrayList<>();
-
-        for (int i = 100; i < Math.pow(10, 5); i *= 100) {
-            for (int j = 0; j < i; j++) {
-                data.add(new String[]{
-                                    String.valueOf(i),
-                                    String.valueOf(insert(new LinearProbingHashMap<>(loadFactor))),
-                                    String.valueOf(insert(new DoubleHashingHashMap<>(loadFactor))),
-                                    String.valueOf(insert(new QuadraticProbingHashMap<>(loadFactor))),
-                                    String.valueOf(insert(new RobinHoodHashMap<>(loadFactor))),
-                                    String.valueOf(insert(new CuckooHashMap<>(loadFactor))),
-                                    String.valueOf(insertRegularHashMap(loadFactor))});
-            }
-            System.out.println(String.format("Lambda done with n=%d", i));
-        }
+        data.add(new String[]{
+                            String.valueOf(n),
+                            String.valueOf(insert(new LinearProbingHashMap<>(loadFactor), n)),
+                            String.valueOf(insert(new DoubleHashingHashMap<>(loadFactor), n)),
+                            String.valueOf(insert(new QuadraticProbingHashMap<>(loadFactor), n)),
+                            String.valueOf(insert(new RobinHoodHashMap<>(loadFactor), n)),
+                            String.valueOf(insert(new CuckooHashMap<>(loadFactor), n)),
+                            String.valueOf(insertRegularHashMap(loadFactor, n))});
 
         return data;
     }
 
-    private static List<String[]> runWithHashFunction(HashStrategy hashStrategy) {
+    private static List<String[]> runWithHashFunction(HashStrategy hashStrategy, int n) {
         List<String[]> data = new ArrayList<>();
-
-        for (int i = 100; i < Math.pow(10, 5); i *= 100) {
-            for (int j = 0; j < i; j++) {
-                data.add(new String[]{
-                                    String.valueOf(i),
-                                    String.valueOf(insert(new LinearProbingHashMap<>(hashStrategy))),
-                                    String.valueOf(insert(new DoubleHashingHashMap<>(hashStrategy))),
-                                    String.valueOf(insert(new QuadraticProbingHashMap<>(hashStrategy))),
-                                    String.valueOf(insert(new RobinHoodHashMap<>(hashStrategy)))});
-            }
-            System.out.println(String.format("Hash function done with n=%d", i));
-        }
+        data.add(new String[]{
+                            String.valueOf(n),
+                            String.valueOf(insert(new LinearProbingHashMap<>(hashStrategy), n)),
+                            String.valueOf(insert(new DoubleHashingHashMap<>(hashStrategy), n)),
+                            String.valueOf(insert(new QuadraticProbingHashMap<>(hashStrategy), n)),
+                            String.valueOf(insert(new RobinHoodHashMap<>(hashStrategy), n)),
+                            "NA",
+                            "NA"});
 
         return data;
     }

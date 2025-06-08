@@ -70,7 +70,7 @@ public class QuadraticProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         for (int i = 0; i < capacity; i++) {
             index = (baseIndex + i * i) % capacity;
 
-            if (table[index].state == EntryState.EMPTY) {
+            if (table[index] == null) {
                 return false; // Key can't be in table beyond this
             }
 
@@ -91,7 +91,7 @@ public class QuadraticProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         for (int i = 0; i < capacity; i++) {
             index = (baseIndex + i * i) % capacity;
 
-            if (table[index].state == EntryState.EMPTY || table[index].state == EntryState.TOMBSTONE) {
+            if (table[index]== null || table[index].state == EntryState.TOMBSTONE) {
                 return index;
             }
         }

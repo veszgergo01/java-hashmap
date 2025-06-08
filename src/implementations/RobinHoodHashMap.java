@@ -31,8 +31,8 @@ public class RobinHoodHashMap<K, V> extends LinearProbingHashMap<K, V> {
         while (true) {
             int probeIndex = (index + i) % capacity;
 
-            // EMPTY or TOMBSTONE: insert here
-            if (table[probeIndex].state != EntryState.OCCUPIED) {
+            // null or TOMBSTONE: insert here
+            if (table[probeIndex] == null || table[probeIndex].state == EntryState.TOMBSTONE) {
                 table[probeIndex] = current;
                 size++;
                 if ((float) size / capacity >= lambda) resize();
@@ -77,7 +77,7 @@ public class RobinHoodHashMap<K, V> extends LinearProbingHashMap<K, V> {
             int probeIndex = (index + i) % capacity;
 
             // Stop if we hit an empty slot — key not in table
-            if (table[probeIndex].state == EntryState.EMPTY) {
+            if (table[probeIndex] == null) {
                 return false;
             }
 

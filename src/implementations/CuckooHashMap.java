@@ -48,7 +48,7 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
         do {
             int index1 = sh.hash(key, hashStrategy, capacity);
             // Empty: no worries
-            if (EntryState.OCCUPIED != table[index1].state) {
+            if (table[index1] == null || EntryState.OCCUPIED != table[index1].state) {
                 table[index1] = newEntry;
                 size++;
                 if ((float) size / capacity >= lambda) resize();
@@ -72,7 +72,7 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
             // No need to try the first place: just got evicted from there
             int index2 = sh.hash(key, hashStrategy2, capacity);
-            if (EntryState.OCCUPIED != table[index2].state) {
+            if (table[index2] == null || EntryState.OCCUPIED != table[index2].state) {
                 table[index2] = newEntry;
                 size++;
                 if ((float) size / capacity >= lambda) resize();
@@ -99,14 +99,14 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
         int index1 = sh.hash(key, hashStrategy, capacity);
         int index2 = sh.hash(key, hashStrategy2, capacity);
 
-        if (key.equals(table[index1].key)) {
+        if (table[index1] != null && key.equals(table[index1].key)) {
             table[index1].key = null;
             table[index1].value = null;
             table[index1].state = EntryState.TOMBSTONE;
             return true;
         }
 
-        if (key.equals(table[index2].key)) {
+        if (table[index2] != null && key.equals(table[index2].key)) {
             table[index2].key = null;
             table[index2].value = null;
             table[index2].state = EntryState.TOMBSTONE;
@@ -135,7 +135,8 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
         int index1 = sh.hash(key, hashStrategy, capacity);
         int index2 = sh.hash(key, hashStrategy2, capacity);
 
-        return key.equals(table[index1].key) || key.equals(table[index2].key);
+        return (table[index1] != null && key.equals(table[index1].key)) ||
+                (table[index2] != null && key.equals(table[index2].key));
     }
 
     @Override

@@ -1,1 +1,6 @@
+# Compiled code
 src/**/*.class
+out/**
+
+# Output data
+**/*.csv

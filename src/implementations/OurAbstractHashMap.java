@@ -60,10 +60,6 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         this.hashStrategy = hashStrategy;
         this.table = new Entry[capacity];
 
-        for (int i = 0; i < table.length; i++) {
-            table[i] = new Entry<K, V>();
-        }
-
         this.size = 0;
     }
 
@@ -71,12 +67,10 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
     public boolean insert(K key, V value) {
         // First step needed to determine if key was already in there
         int index = hash(key);
-        boolean collision = !key.equals(table[index].key);
+        boolean collision = table[index] != null && !key.equals(table[index].key);
         index = handleCollision(index);
 
-        table[index].key = key;
-        table[index].value = value;
-        table[index].state = EntryState.OCCUPIED;
+        table[index] = new Entry<K, V>(key, value);
         size++;
         if ((float) size / capacity >= lambda) resize();
 
@@ -97,12 +91,9 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
     public boolean clear() {
         boolean result = !isEmpty();
 
-        for (int i = 0; i < table.length; i++) {
-            table[i] = new Entry<K, V>();
-        }
-
         size = 0;
         capacity = DEFAULT_CAPACITY;
+        table = new Entry[capacity];
 
         return result;
     }
@@ -114,7 +105,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
 
             @Override
             public boolean hasNext() {
-                while (index < table.length && table[index].key == null) {
+                while (index < table.length && (table[index] == null || table[index].key == null)) {
                     index++;
                 }
                 return index < table.length;
@@ -144,9 +135,6 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         // Initialize new table
         capacity = BigInteger.valueOf(capacity * 2).nextProbablePrime().intValue();
         table = new Entry[capacity];
-        for (int i = 0; i < table.length; i++) {
-            table[i] = new Entry<K, V>();
-        }
 
         rehash(oldTable);
 
@@ -175,7 +163,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         size = 0;
 
         for (Entry<K, V> entry : oldTable) {
-            if (EntryState.OCCUPIED.equals(entry.state)) {
+            if (entry != null && EntryState.OCCUPIED.equals(entry.state)) {
                 insert(entry.key, entry.value);
             }
         }

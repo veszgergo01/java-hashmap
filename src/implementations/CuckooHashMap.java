@@ -22,7 +22,11 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
     private static final int MAX_LOOP = 32;
 
     public CuckooHashMap() {
-        this(DEFAULT_HASHING_STRATEGY, HashStrategy.values()[1]);
+        this(DEFAULT_CAPACITY, DEFAULT_LAMBDA_VALUE, HashStrategy.values()[0], HashStrategy.values()[1]);
+    }
+
+    public CuckooHashMap(float loadFactor) {
+        this(DEFAULT_CAPACITY, loadFactor, HashStrategy.values()[0], HashStrategy.values()[1]);
     }
 
     public CuckooHashMap(HashStrategy h1, HashStrategy h2) {

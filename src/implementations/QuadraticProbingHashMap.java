@@ -1,10 +1,19 @@
 package src.implementations;
 
 import src.definitions.EntryState;
+import src.hashing.HashStrategy;
 
 public class QuadraticProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
     public QuadraticProbingHashMap() {
-        super();
+        this(DEFAULT_CAPACITY, DEFAULT_LAMBDA_VALUE);
+    }
+
+    public QuadraticProbingHashMap(float loadFactor) {
+        this(DEFAULT_CAPACITY, loadFactor);
+    }
+
+    public QuadraticProbingHashMap(HashStrategy hashStrategy) {
+        super(hashStrategy);
     }
 
     public QuadraticProbingHashMap(int capacity, float loadFactor) {
@@ -87,6 +96,7 @@ public class QuadraticProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
             }
         }
 
-        throw new RuntimeException("No available slot found during collision handling (table may be full)");
+        resize();
+        return handleCollision(initialIndex);
     }
 }

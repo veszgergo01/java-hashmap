@@ -1,13 +1,25 @@
 package src;
 
-import src.definitions.Entry;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 import src.definitions.OurMapInterface;
+import src.extraction.CSVManager;
+import src.hashing.HashStrategy;
+import src.implementations.CuckooHashMap;
+import src.implementations.DoubleHashingHashMap;
+import src.implementations.LinearProbingHashMap;
 import src.implementations.QuadraticProbingHashMap;
 import src.implementations.RobinHoodHashMap;
 
 public class Main {
     public static void main(String[] args) {
         OurMapInterface<String, Integer> map = new RobinHoodHashMap<>(8, 0.75f);
+
+        greg();
 
         // System.out.println("=== INSERT TESTS ===");
         // map.insert("A", 1);
@@ -42,32 +54,132 @@ public class Main {
         // map.insert("X", 99);
         // System.out.println("X = " + map.get("X")); // expect 99
 
-        map.insert("Aa", 1);
-        map.insert("BB", 2);
-        map.insert("A", 1);
-        int size = map.size();
-        System.out.println("Size: " + size);
-        map.insert("B", 1);
-        map.insert("AaAa", 3);
-        map.insert("C", 1);
-        map.insert("AaAa", 7);
+        // map.insert("Aa", 1);
+        // map.insert("BB", 2);
+        // map.insert("A", 1);
+        // int size = map.size();
+        // System.out.println("Size: " + size);
+        // map.insert("B", 1);
+        // map.insert("AaAa", 3);
+        // map.insert("C", 1);
+        // map.insert("AaAa", 7);
 
         
-        System.out.println("\n=== FINAL MAP CONTENTS ===");
-        for (Entry<String, Integer> entry : (Iterable<Entry<String, Integer>>) map::items) {
-            System.out.println(entry.key + " -> " + entry.value);
+        // System.out.println("\n=== FINAL MAP CONTENTS ===");
+        // for (Entry<String, Integer> entry : (Iterable<Entry<String, Integer>>) map::items) {
+        //     System.out.println(entry.key + " -> " + entry.value);
+        // }
+        // size = map.size();
+        // System.out.println("Size: " + size);
+        // System.out.println("All output above should match expected values.");
+        // map.clear();
+        // size = map.size();
+        // System.out.println("Size: " + size);
+        // boolean empty = map.isEmpty();
+        // System.out.println("Empty?: " + empty);
+        // System.out.println("\n=== FINAL MAP CONTENTS ===");
+        // for (Entry<String, Integer> entry : (Iterable<Entry<String, Integer>>) map::items) {
+        //     System.out.println(entry.key + " -> " + entry.value);
+        // }
+    }
+
+    private static void greg() {
+        List<String[]> data = new ArrayList<>();
+        float[] lambdas = {0.33f, 0.5f, 0.75f, 0.9f};
+        final int MAX_INSERT_ELEMENTS = (int) Math.pow(100, 5);
+
+        for (float lambda : lambdas) {
+            data.add(new String[]{"n=", "linear", "double", "quadratic", "robin", "cuckoo", "java"});
+            for (int i = 100; i < MAX_INSERT_ELEMENTS; i *= 100) {
+                data.addAll(runWithLoadFactor(lambda, i));
+                System.out.println(String.format("Lambda done with n=%d", i));
+            }
+
+            CSVManager.writeToCSV(String.format("output_lambda_%f.csv", lambda), data);
+            data.clear();
         }
-        size = map.size();
-        System.out.println("Size: " + size);
-        System.out.println("All output above should match expected values.");
-        map.clear();
-        size = map.size();
-        System.out.println("Size: " + size);
-        boolean empty = map.isEmpty();
-        System.out.println("Empty?: " + empty);
-        System.out.println("\n=== FINAL MAP CONTENTS ===");
-        for (Entry<String, Integer> entry : (Iterable<Entry<String, Integer>>) map::items) {
-            System.out.println(entry.key + " -> " + entry.value);
+
+        HashStrategy[] hashStrategies = HashStrategy.values();
+
+        for (HashStrategy hashStrategy : hashStrategies) {
+            data.add(new String[]{"n=", "linear", "double", "quadratic", "robin", "cuckoo", "java"});
+            for (int i = 100; i < MAX_INSERT_ELEMENTS; i *= 100) {
+                data.addAll(runWithHashFunction(hashStrategy, i));
+                System.out.println(String.format("Hash function done with n=%d", i));
+            }
+
+            CSVManager.writeToCSV(String.format("output_hashfunction_%s.csv", hashStrategy.toString().toLowerCase()), data);
+            data.clear();
         }
+    }
+
+    private static String getRandomString() {
+        StringBuilder sb = new StringBuilder();
+        Random rd = new Random();
+        for (int j = 0; j < rd.nextInt(7) + 3; j++) {
+            sb.append((char) (rd.nextInt(26) + 'a'));
+        }
+
+        return sb.toString();
+    }
+
+    /** Returns time in seconds to complete */
+    private static float insert(OurMapInterface<String, Integer> map, int times) {
+        long startTime = System.nanoTime();
+
+        for (int i = 0; i < times; i++) {
+            Random rd = new Random();
+            map.insert(getRandomString(), rd.nextInt(100));
+        }
+
+        long endTime = System.nanoTime();
+        long timeSpent = endTime - startTime;
+        float timeSpentSeconds = ((float) timeSpent) / 1000000000f;
+
+        return timeSpentSeconds;
+    }
+
+    private static float insertRegularHashMap(float loadFactor, int times) {
+        long startTime = System.nanoTime();
+
+        Map<String, Integer> javaMap = new HashMap<>(16, loadFactor);
+        for (int i = 10; i < times; i++) {
+            Random rd = new Random();
+            javaMap.put(getRandomString(), rd.nextInt(100));
+        }
+
+        long endTime = System.nanoTime();
+        long timeSpent = endTime - startTime;
+        float timeSpentSeconds = ((float) timeSpent) / 1000000000f;
+
+        return timeSpentSeconds;
+    }
+
+    private static List<String[]> runWithLoadFactor(float loadFactor, int n) {
+        List<String[]> data = new ArrayList<>();
+        data.add(new String[]{
+                            String.valueOf(n),
+                            String.valueOf(insert(new LinearProbingHashMap<>(loadFactor), n)),
+                            String.valueOf(insert(new DoubleHashingHashMap<>(loadFactor), n)),
+                            String.valueOf(insert(new QuadraticProbingHashMap<>(loadFactor), n)),
+                            String.valueOf(insert(new RobinHoodHashMap<>(loadFactor), n)),
+                            String.valueOf(insert(new CuckooHashMap<>(loadFactor), n)),
+                            String.valueOf(insertRegularHashMap(loadFactor, n))});
+
+        return data;
+    }
+
+    private static List<String[]> runWithHashFunction(HashStrategy hashStrategy, int n) {
+        List<String[]> data = new ArrayList<>();
+        data.add(new String[]{
+                            String.valueOf(n),
+                            String.valueOf(insert(new LinearProbingHashMap<>(hashStrategy), n)),
+                            String.valueOf(insert(new DoubleHashingHashMap<>(hashStrategy), n)),
+                            String.valueOf(insert(new QuadraticProbingHashMap<>(hashStrategy), n)),
+                            String.valueOf(insert(new RobinHoodHashMap<>(hashStrategy), n)),
+                            "NA",
+                            "NA"});
+
+        return data;
     }
 }

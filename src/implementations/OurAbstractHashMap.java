@@ -1,4 +1,5 @@
 package src.implementations;
+import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -15,7 +16,7 @@ import src.definitions.EntryState;
  * Extending classes will add precise implementation details (e.g. hashing strategies).
  */
 public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> {
-    public static final int DEFAULT_CAPACITY = 5;
+    public static final int DEFAULT_CAPACITY = 16;
     public static final float DEFAULT_LAMBDA_VALUE = 0.75f;
     public static final HashStrategy DEFAULT_HASHING_STRATEGY = HashStrategy.values()[0];
 
@@ -144,7 +145,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         Entry<K, V>[] oldTable = table;
 
         // Initialize new table
-        capacity = capacity * 2;
+        capacity = BigInteger.valueOf(capacity * 2).nextProbablePrime().intValue();
         table = new Entry[capacity];
         for (int i = 0; i < table.length; i++) {
             table[i] = new Entry<K, V>();

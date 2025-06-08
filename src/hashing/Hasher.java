@@ -29,6 +29,9 @@ public class Hasher<T> {
             case SIMPLE_STRATEGY:
                 result = simpleStrategy(s.toString());
                 break;
+            case RELATIVE_PRIME:
+                result = relativePrimeHash(s.toString(), mod);
+                break;
             default:
                 throw new IllegalArgumentException(String.format("%s is not a valid strategy; see method contract", hashFunction.toString()));
         }
@@ -64,5 +67,9 @@ public class Hasher<T> {
         }
 
         return sum;
+    }
+
+    private int relativePrimeHash(String s, int tableSize) {
+        return 1 + (s.hashCode() % (tableSize - 1));
     }
 }

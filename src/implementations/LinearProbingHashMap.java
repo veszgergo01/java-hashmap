@@ -1,10 +1,19 @@
 package src.implementations;
 
 import src.definitions.EntryState;
+import src.hashing.HashStrategy;
 
 public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
     public LinearProbingHashMap() {
-        super();
+        this(DEFAULT_CAPACITY, DEFAULT_LAMBDA_VALUE);
+    }
+
+    public LinearProbingHashMap(float loadFactor) {
+        this(DEFAULT_CAPACITY, loadFactor);
+    }
+
+    public LinearProbingHashMap(HashStrategy hashStrategy) {
+        super(hashStrategy);
     }
 
     public LinearProbingHashMap(int capacity, float loadFactor) {

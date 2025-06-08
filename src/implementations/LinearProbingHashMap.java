@@ -45,7 +45,7 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         if (!has(key)) return null;
 
         /** Guaranteed to halt, due to contract of {@code this#has()} */
-        while (!key.equals(table[index].key)) {
+        while (table[index] == null || !key.equals(table[index].key)) {
             index = (index + 1) % capacity;
         }
 
@@ -57,7 +57,7 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         int index = hash(key);
         final int initIndex = index;
 
-        while (!key.equals(table[index].key)) {
+        while (table[index] == null || !key.equals(table[index].key)) {
             index = (index + 1) % capacity;
             if (index == initIndex) return false;
         }
@@ -67,7 +67,7 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
     @Override
     protected int handleCollision(int index) {
-        while (EntryState.OCCUPIED.equals(table[index].state)) {
+        while (table[index] != null && EntryState.OCCUPIED.equals(table[index].state)) {
             index = (index + 1) % capacity;
         }
 

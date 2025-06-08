@@ -32,7 +32,7 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
         if (!has(key)) return false;
 
-        while (!key.equals(table[index].key)) {
+        while (table[index] == null || !key.equals(table[index].key)) {
             index = calculateNewIndex(key, index);
             eye++;
         }
@@ -65,7 +65,7 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         int index = hash(key);
         final int initIndex = index;
 
-        while (!key.equals(table[index].key)) {
+        while (table[index] == null || !key.equals(table[index].key)) {
             index = calculateNewIndex(key, index);
             eye++;
             if (index == initIndex) return false;
@@ -80,7 +80,7 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
         int initialIndex = index;
         int probes = 0;
 
-        while (EntryState.OCCUPIED.equals(table[index].state)) {
+        while (table[index] != null && EntryState.OCCUPIED.equals(table[index].state)) {
             index = calculateNewIndex(currentInsertKey, index);
             eye++;
             probes++;

@@ -93,7 +93,7 @@ public class RobinHoodHashMap<K, V> extends LinearProbingHashMap<K, V> {
                 // Shift-back subsequent entries to fill the hole
                 int j = (probeIndex + 1) % capacity;
 
-                while (table[j].state == EntryState.OCCUPIED) {
+                while (table[j] != null && table[j].state == EntryState.OCCUPIED) {
                     int home = hash(table[j].key);
                     int distFromHome = (j - home + capacity) % capacity;
 

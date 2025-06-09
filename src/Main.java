@@ -26,7 +26,7 @@ public class Main {
                                                                 "java_insertion_time", "java_probe_length", "java_rehash_count"
                                                             };
     private static final float[] lambdas = {0.33f, 0.5f, 0.75f, 0.9f};
-    private static final int MAX_INSERT_ELEMENTS = (int) Math.pow(10, 5);
+    private static final int MAX_INSERT_ELEMENTS = (int) Math.pow(10, 7);
 
     public static void main(String[] args) {
         List<String[]> data = new ArrayList<>();
@@ -41,26 +41,19 @@ public class Main {
 
                 result = insert(new LinearProbingHashMap<>(lambda), i);
                 resultsList.addAll(List.of(String.valueOf(result[0]), String.valueOf(result[1]), String.valueOf(result[2])));
-                System.out.println("Linear");
 
                 result = insert(new DoubleHashingHashMap<>(lambda), i);
                 resultsList.addAll(List.of(String.valueOf(result[0]), String.valueOf(result[1]), String.valueOf(result[2])));
-                System.out.println("Double");
 
                 result = insert(new QuadraticProbingHashMap<>(lambda), i);
                 resultsList.addAll(List.of(String.valueOf(result[0]), String.valueOf(result[1]), String.valueOf(result[2])));
-                System.out.println("Quadratic");
-
                 result = insert(new RobinHoodHashMap<>(lambda), i);
                 resultsList.addAll(List.of(String.valueOf(result[0]), String.valueOf(result[1]), String.valueOf(result[2])));
-                System.out.println("Robin");
 
                 result = insert(new CuckooHashMap<>(lambda), i);
                 resultsList.addAll(List.of(String.valueOf(result[0]), String.valueOf(result[1]), String.valueOf(result[2])));
-                System.out.println("Cuckoo");
 
                 resultsList.addAll(List.of(String.valueOf(insertRegularHashMap(lambda, i)), "NA", "NA"));
-                System.out.println("Java");
 
                 data.add(resultsList.toArray(new String[0]));
             }
@@ -80,26 +73,20 @@ public class Main {
 
                 result = insert(new LinearProbingHashMap<>(hashStrategy), i);
                 resultsList.addAll(List.of(String.valueOf(result[0]), String.valueOf(result[1]), String.valueOf(result[2])));
-                System.out.println("Linear");
 
                 result = insert(new DoubleHashingHashMap<>(hashStrategy), i);
                 resultsList.addAll(List.of(String.valueOf(result[0]), String.valueOf(result[1]), String.valueOf(result[2])));
-                System.out.println("Double");
 
                 result = insert(new QuadraticProbingHashMap<>(hashStrategy), i);
                 resultsList.addAll(List.of(String.valueOf(result[0]), String.valueOf(result[1]), String.valueOf(result[2])));
-                System.out.println("Quadratic");
 
                 result = insert(new RobinHoodHashMap<>(hashStrategy), i);
                 resultsList.addAll(List.of(String.valueOf(result[0]), String.valueOf(result[1]), String.valueOf(result[2])));
-                System.out.println("Robin");
 
                 // Cannot change strategies for Cuckoo, as it is being switched around
                 resultsList.addAll(List.of("NA", "NA", "NA"));
-                System.out.println("Cuckoo");
 
                 resultsList.addAll(List.of("NA", "NA", "NA"));
-                System.out.println("Java");
 
                 data.add(resultsList.toArray(new String[0]));
             }
@@ -121,6 +108,8 @@ public class Main {
 
     /** Returns time in seconds to complete */
     private static float[] insert(OurMapInterface<String, Integer> map, int cnt) {
+        System.out.println(String.format("Inserting %d elements using %s", cnt, map.getClass().getSimpleName()));
+
         float cumulativeTimeSeconds = 0;
         long cumulativeNrOfProbes = 0;
         long cumulativeNrOfRehashes = 0;

@@ -46,4 +46,8 @@ public interface OurMapInterface<K, V> {
      * Returns the capacity of the new hash table.
      */
     public int resize();
+
+    public long getNumberOfProbes();
+
+    public long getRehashCount();
 }

@@ -46,6 +46,8 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
         int countLoop = 0;
 
         do {
+            nrOfProbes++;
+            
             int index1 = sh.hash(key, hashStrategy, capacity);
             // Empty: no worries
             if (table[index1] == null || EntryState.OCCUPIED != table[index1].state) {

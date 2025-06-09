@@ -81,13 +81,15 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
     @Override
     protected int handleCollision(int index) {
-        int initialIndex = index;
         int probes = 0;
+        nrOfProbes++;
 
         while (table[index] != null && EntryState.OCCUPIED.equals(table[index].state)) {
             index = calculateNewIndex(currentInsertKey, index);
             eye++;
             probes++;
+
+            nrOfProbes++;
 
             if (probes >= capacity) {
                 resize();
@@ -102,6 +104,8 @@ public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
 
     private int calculateNewIndex(K key, int index) {
-        return (sh.hash(key, HashStrategy.JAVA_DEFAULT, capacity) + eye * sh.hash(key, HashStrategy.RELATIVE_PRIME, capacity)) % capacity;
+        int newIndex = (sh.hash(key, HashStrategy.JAVA_DEFAULT, capacity) + eye * sh.hash(key, HashStrategy.RELATIVE_PRIME, capacity)) % capacity;
+        if (newIndex < 0) newIndex += capacity;
+        return newIndex;
     }
 }

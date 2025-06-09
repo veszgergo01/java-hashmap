@@ -25,6 +25,9 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
     protected HashStrategy hashStrategy;
     protected Entry<K, V>[] table;
 
+    protected long nrOfProbes;
+    protected long nrOfRehashes;
+
     protected int size;
 
     public OurAbstractHashMap() {
@@ -61,6 +64,7 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         this.table = new Entry[capacity];
 
         this.size = 0;
+        this.nrOfProbes = 0;
     }
 
     @Override
@@ -92,6 +96,8 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
         boolean result = !isEmpty();
 
         size = 0;
+        nrOfProbes = 0;
+        nrOfRehashes = 0;
         capacity = DEFAULT_CAPACITY;
         table = new Entry[capacity];
 
@@ -161,11 +167,22 @@ public abstract class OurAbstractHashMap<K, V> implements OurMapInterface<K, V> 
      */
     protected void rehash(Entry<K, V>[] oldTable) {
         size = 0;
+        nrOfRehashes++;
 
         for (Entry<K, V> entry : oldTable) {
             if (entry != null && EntryState.OCCUPIED.equals(entry.state)) {
                 insert(entry.key, entry.value);
             }
         }
+    }
+
+    @Override
+    public long getNumberOfProbes() {
+        return this.nrOfProbes;
+    }
+
+    @Override
+    public long getRehashCount() {
+        return this.nrOfRehashes;
     }
 }

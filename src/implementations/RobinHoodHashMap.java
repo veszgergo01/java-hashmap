@@ -29,6 +29,8 @@ public class RobinHoodHashMap<K, V> extends LinearProbingHashMap<K, V> {
         Entry<K, V> current = new Entry<>(key, value);
 
         while (true) {
+            nrOfProbes++;
+            
             int probeIndex = (index + i) % capacity;
 
             // null or TOMBSTONE: insert here

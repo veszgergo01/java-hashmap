@@ -90,6 +90,8 @@ public class QuadraticProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
         for (int i = 0; i < capacity; i++) {
             index = (baseIndex + i * i) % capacity;
+            
+            nrOfProbes++;
 
             if (table[index]== null || table[index].state == EntryState.TOMBSTONE) {
                 return index;

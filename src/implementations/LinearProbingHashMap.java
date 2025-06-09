@@ -67,8 +67,11 @@ public class LinearProbingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
     @Override
     protected int handleCollision(int index) {
+        nrOfProbes++;
         while (table[index] != null && EntryState.OCCUPIED.equals(table[index].state)) {
             index = (index + 1) % capacity;
+
+            nrOfProbes++;
         }
 
         return index;

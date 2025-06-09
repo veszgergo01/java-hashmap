@@ -36,8 +36,10 @@ public class Hasher<T> {
                 throw new IllegalArgumentException(String.format("%s is not a valid strategy; see method contract", hashFunction.toString()));
         }
 
-        result = Math.abs(result) % mod;
-        if (result < 0) result += mod;
+        result %= mod;
+        if (result < 0) {
+            result += mod;
+        }
 
         return result;
     }
@@ -45,7 +47,7 @@ public class Hasher<T> {
     private int stringFolding(String s) {
         long sum = 0, mul = 1;
         for (int i = 0; i < s.length(); i++) {
-            mul = (i % 4 == 0) ? 1 : mul * 256;
+            mul = (i % 4 == 0) ? 1 : mul << 8;
             sum += s.charAt(i) * mul;
         }
 

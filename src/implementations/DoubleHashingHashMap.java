@@ -6,6 +6,10 @@ import src.hashing.Hasher;
 
 public class DoubleHashingHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
+    public DoubleHashingHashMap() {
+        super();
+    }
+
     public DoubleHashingHashMap(float loadFactor) {
         super(loadFactor);
     }

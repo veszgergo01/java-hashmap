@@ -8,8 +8,8 @@ import src.hashing.Hasher;
 public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
     // For Cuckoo hashing the load factor is best to be kept below 50%
-    // Source: https://link.springer.com/chapter/10.1007/3-540-44676-1_10 TODO check
-    // https://www.geeksforgeeks.org/cuckoo-hashing/ <-- definitely here
+    // Source: https://link.springer.com/chapter/10.1007/3-540-44676-1_10
+    //         https://www.geeksforgeeks.org/cuckoo-hashing/
     public static final float DEFAULT_LAMBDA_VALUE = 0.5f;
     private final HashStrategy[] AVAILABLE_HASH_STRATEGIES = HashStrategy.values();
 
@@ -143,7 +143,6 @@ public class CuckooHashMap<K, V> extends OurAbstractHashMap<K, V> {
 
     @Override
     protected int handleCollision(int initialIndex) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'handleCollision'");
     }
 

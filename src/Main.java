@@ -145,7 +145,7 @@ public class Main {
         long startTime = System.nanoTime();
 
         Map<String, Integer> javaMap = new HashMap<>(16, loadFactor);
-        for (int i = 10; i < times; i++) {
+        for (int i = 0; i < times; i++) {
             Random rd = new Random();
             javaMap.put(getRandomString(), rd.nextInt(100));
         }
